@@ -1,61 +1,58 @@
 import os
 import csv
 
-csvpath = os.path.join('C:/Users/Isabel/Desktop/personal-data/Homework/python-challenge/03-Python/Instructions/PyBank/Resources/budget_data.csv')
+csvpath = os.path.join('C:/Users/Isabel/Desktop/personal-data/Homework/python-challenge/03-Python/Instructions/PyPoll/Resources/election_data.csv')
 with open(csvpath) as csvfile:
 
     # CSV reader specifies delimiter and variable that holds contents
     csvreader = csv.reader(csvfile, delimiter=',')
     #skips the header row
     next(csvreader)
-    #initialize the the variables
-    total_months = 0
-    total_profit = 0
-    previous= 0
-    #list is always = to []
-    change_list= []
-    #these lists will capture two elements, the 1st being the date, second being the value
-    #initialize as 0 because it will be less than the max
-    max_change= ["",0]
-    #initialize as 999999 because it will be less than the max
-    min_change= ["",999999]
 
+    #initialize variables
+    total_votes = 0
+    winner= ""
+    winner_count= 0
+    
+
+    candidates_list= []
+    candidate_dict= {}
 
     # Read each row of data after the header
     for row in csvreader:
-        #print(row)
-        #add to the count of total months through each loop
-        total_months= total_months + 1   
-        #get the sum of profits/losses (row[1] = 2nd column; change to interger using int())
-        total_profit= total_profit + int(row[1])
-        #convert row[1] into an integer for calculation
-        change= int(row[1]) - previous
-        previous = int(row[1])
-        change_list.append(change)
-        if change > max_change[1]:
-            max_change[0]= row[0]
-            max_change[1]= change
+        total_votes= total_votes + 1
 
-        if change < min_change[1]:
-            min_change[0]= row[0]
-            min_change[1]= change
+       
+        candidate= row[2]
+        if candidate not in candidates_list:
+            candidates_list.append(candidate)
+            candidate_dict[row[2]]= 0
+        candidate_dict[row[2]]= candidate_dict[row[2]] + 1
+    print ("Election Results")   
+    print ("-------------------------") 
+    print (f'Total Votes: {total_votes}')  
+    print ("-------------------------")
+    #print(candidate_dict) 
 
-    #average of the change_list
-    #sum(change_list[1:]); starts with the second value in the list
-    #(len(change_list)-1); subtract 1 from total number of elements in the change list 
-    total_average= sum(change_list[1:]) / (len(change_list)-1)   
-    #Find maximum Change
-    #maximum_change= max(change_list)
-    #Find minumum Change
-    #minimum_change= min(change_list)
+    for name in candidate_dict:
+        votes= candidate_dict[name]   
+        percentage= round(votes/total_votes * 100)
+        print(f' {name}: {percentage}% ({votes})')
 
-    #once done looping through print the total months, total profit 
-    # Print Results:
-    print("Financial Analysis") 
-    print ("----------------------------")
-    print(f'Total Months: {total_months}')
-    print(f'Total: ${total_profit}')
-    print(f'Average Change: ${total_average}')
-    print(f'Greatest Increase in Profits: {max_change[0]} (${max_change[1]})')
-    print(f'Greatest Decrease in Profits: {min_change[0]} (${min_change[1]})')
+        if votes > winner_count:
+            winner_count= votes
+            winner= name
+    print("-------------------------")
 
+    
+    print(f'Winner: {winner}')
+
+    print("-------------------------")
+
+
+
+      
+        
+
+    
+         
